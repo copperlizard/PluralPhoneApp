@@ -24,10 +24,26 @@ public class PanelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if UNITY_EDITOR
+        GetKeyboardInput();
+#else
         GetTouchInput();
+#endif
     }
 
-    private void GetTouchInput()
+    private void GetKeyboardInput ()
+    {
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            SwipeLeft();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            SwipeRight();
+        }
+    }
+
+    private void GetTouchInput ()
     {
         for (int i = 0; i < Input.touchCount; ++i)
         {
@@ -40,7 +56,7 @@ public class PanelManager : MonoBehaviour
         }
     }
 
-    IEnumerator GetMoveInput()
+    IEnumerator GetMoveInput ()
     {
         Vector2 touchStart = Input.GetTouch(0).position;
 

@@ -69,8 +69,10 @@ public class MaterialManager : MonoBehaviour
 
     public Dropdown m_calcMatDropDown, m_matMatDropDown;
 
-	// Use this for initialization
-	void Start ()
+    private Text m_matNamePlaceHolderText, m_matSGPlaceHolderText, m_matDPlaceHolderText;
+
+    // Use this for initialization
+    void Start ()
     {
         if (m_matName == null)
         {
@@ -97,9 +99,13 @@ public class MaterialManager : MonoBehaviour
             Debug.Log("m_matMatDropDown not assigned!");
         }
 
+        m_matNamePlaceHolderText = m_matName.placeholder.GetComponent<Text>();
+        m_matSGPlaceHolderText = m_matSG.placeholder.GetComponent<Text>();
+        m_matDPlaceHolderText = m_matD.placeholder.GetComponent<Text>();
+
         LoadList();
-        RefreshDropDowns();
-	}
+        UpdateMaterialPanel();
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -107,57 +113,129 @@ public class MaterialManager : MonoBehaviour
 		
 	}
 
-    public void UpdateMaterialName (string name) //called when input field value changes on mat panel
+    public void UpdateMaterialName () //called when input field value changes on mat panel
     {
-        //Ensure name is not a duplicate (add _duplicate#)
+        //Ensure name is not a duplicate
+        bool dupe = false;
+        string newName = m_matName.text;
+        int dupNum = 0;
 
+        do
+        {
+            dupe = false;
+            foreach (Mat mat in m_materials)
+            {
+                if (newName == mat.m_name)
+                {
+                    dupe = true;
+                    dupNum++;
+
+                    newName = name + dupNum.ToString();
+                }
+            }
+
+        } while (dupe);
+
+        m_materials[m_matMatDropDown.value].m_name = newName;
+
+        SaveList(); //sorts list
+        UpdateMaterialPanel();
+
+        int matOptionNum = m_materials.IndexOf(new Mat(newName));
+        m_matMatDropDown.value = matOptionNum;        
+    }
+
+    public void UpdateMaterialSG() //called when input field value changes on mat panel
+    {
+        //SG * ρH2O = ρsubstance
+
+        //for D[kg/m^3] => ρH2O = 1000
+        //for D[g/cm^3] => ρH2O = 1
+
+        m_materials[m_matMatDropDown.value].m_sg = float.Parse(m_matSG.text);
+        m_materials[m_matMatDropDown.value].m_d = m_materials[m_matMatDropDown.value].m_sg * 1000.0f;
+
+        SaveList();
         UpdateMaterialPanel();
     }
 
-    public void UpdateMaterialSG(float sg) //called when input field value changes on mat panel
+    public void UpdateMaterialD() //called when input field value changes on mat panel
     {
+        //SG = ρsubstance / ρH2O
 
+        //for D[kg/m^3] => ρH2O = 1000
+        //for D[g/cm^3] => ρH2O = 1
 
-        UpdateMaterialPanel();
-    }
+        m_materials[m_matMatDropDown.value].m_d = float.Parse(m_matD.text);
+        m_materials[m_matMatDropDown.value].m_sg = m_materials[m_matMatDropDown.value].m_d / 1000.0f;
 
-    public void UpdateMaterialD(float d) //called when input field value changes on mat panel
-    {
-
-
+        SaveList();
         UpdateMaterialPanel();
     }
 
     public void UpdateMaterialPanel () //called when m_matMatDropDon.value changes
-    {
+    {        
         RefreshDropDowns();
 
-        // update fields on materials panel
+        // update fields on materials panel  
+        m_matName.text = "";
+        m_matSG.text = "";
+        m_matD.text = "";
+        m_matNamePlaceHolderText.text = m_materials[m_matMatDropDown.value].m_name;
+        m_matSGPlaceHolderText.text = m_materials[m_matMatDropDown.value].m_sg.ToString();
+        m_matDPlaceHolderText.text = m_materials[m_matMatDropDown.value].m_d.ToString();
     }
 
     public void AddMaterial () //called by gui
     {
+        bool dupe = false;
+        string newName = "new";
+        int dupNum = 0;
+
+        do
+        {
+            dupe = false;
+            foreach (Mat mat in m_materials)
+            {
+                if (newName == mat.m_name)
+                {
+                    dupe = true;
+                    dupNum++;
+
+                    newName = "new" + dupNum.ToString();
+                }
+            }
+
+        } while (dupe);
+
+        m_materials.Add(new Mat(newName));
+
+        SaveList();
         RefreshDropDowns();
+
+        int matOptionNum = m_materials.IndexOf(new Mat(newName));
+        m_matMatDropDown.value = matOptionNum;
     }
-
-    private void AlphabatizeList() //called by refreshdropdowns and loadlist
+    
+    public void RemoveMaterial () //called by gui
     {
-
+        m_materials.RemoveAt(m_matMatDropDown.value);
+        if (m_materials.Count < 1)
+        {
+            AddMaterial();
+        }
+        
+        m_matMatDropDown.value = 0;
+        
+        SaveList();
+        RefreshDropDowns();
     }
 
     private void RefreshDropDowns ()
     {
-        //Ensure drop down selection does not change when/after alphabatizing
-
         Dropdown.OptionData calcMatDropDownOption = m_calcMatDropDown.options[m_calcMatDropDown.value];
         Dropdown.OptionData matMatDropDownOption = m_matMatDropDown.options[m_matMatDropDown.value];
-
-        Debug.Log("selected m_calcMatDropDown material == " + calcMatDropDownOption.text);
-        Debug.Log("selected m_matMatDropDown material == " + matMatDropDownOption.text);
-
-        //AlphabatizeList();
-        m_materials.Sort();
-
+        
         m_calcMatDropDown.options.Clear();
         m_matMatDropDown.options.Clear();
 
@@ -203,19 +281,20 @@ public class MaterialManager : MonoBehaviour
             m_materials.Add(new Mat("SSU03", 0.0f, 0.0f)); // water soluble
 
             //AlphabatizeList();
-            m_materials.Sort();
+            m_materials.Sort(); //because I'm lazy
             file.Close();
             SaveList();
             return;
         }
 
-        file.Close();
-        AlphabatizeList();
+        file.Close();        
         return;
     }
 
     private bool SaveList ()
     {
+        m_materials.Sort();
+
         FileStream file;
         BinaryFormatter bf = new BinaryFormatter();
 
@@ -229,10 +308,13 @@ public class MaterialManager : MonoBehaviour
             return false;            
         }
 
+        /*
+        Debug.Log("saving!");
         foreach (Mat mat in m_materials)
         {
-            Debug.Log("mat.name == " + mat.m_name);
+            Debug.Log(mat.ToString());
         }
+        */
 
         bf.Serialize(file, m_materials);
         file.Close();
