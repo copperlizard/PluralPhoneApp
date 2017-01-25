@@ -72,7 +72,7 @@ public class MaterialManager : MonoBehaviour
     private Text m_matNamePlaceHolderText, m_matSGPlaceHolderText, m_matDPlaceHolderText;
 
     // Use this for initialization
-    void Start ()
+    void Awake ()
     {
         if (m_matName == null)
         {
@@ -269,16 +269,15 @@ public class MaterialManager : MonoBehaviour
 
             // GENERATE BASIC MATERIALS!!!
 
-            m_materials.Add(new Mat("ABS", 0.0f, 0.0f));
-            m_materials.Add(new Mat("ASA", 0.0f, 0.0f));
-            m_materials.Add(new Mat("HIPS", 0.0f, 0.0f));
-            m_materials.Add(new Mat("PETG", 0.0f, 0.0f));
-            m_materials.Add(new Mat("TPU", 0.0f, 0.0f));
-            m_materials.Add(new Mat("PLA", 0.0f, 0.0f));
-            m_materials.Add(new Mat("Nylon", 0.0f, 0.0f));
-            m_materials.Add(new Mat("SSU01", 0.0f, 0.0f)); // soluble
-            m_materials.Add(new Mat("SSU02", 0.0f, 0.0f)); // softening
-            m_materials.Add(new Mat("SSU03", 0.0f, 0.0f)); // water soluble
+            m_materials.Add(new Mat("ABS", 1.04f, 1040.0f));
+            m_materials.Add(new Mat("ASA", 1.08f, 1080.0f));
+            m_materials.Add(new Mat("HIPS", 1.04f, 1040.0f));
+            m_materials.Add(new Mat("PETG", 1.27f, 1270.0f));
+            m_materials.Add(new Mat("TPU", 1.12f, 1120.0f));
+            m_materials.Add(new Mat("PLA", 1.24f, 1240.0f));
+            m_materials.Add(new Mat("Nylon 680", 1.1f, 1100.0f));
+            m_materials.Add(new Mat("SSU01", 1.24f, 1240.0f)); // soluble
+            m_materials.Add(new Mat("SSU02", 1.24f, 1240.0f)); // softening            
 
             //AlphabatizeList();
             m_materials.Sort(); //because I'm lazy
@@ -320,15 +319,5 @@ public class MaterialManager : MonoBehaviour
         file.Close();
 
         return true;
-    }
-
-    private float SGtoD (float SG)
-    {
-        return 0.0f;
-    }
-
-    private float DtoSG(float D)
-    {
-        return 0.0f;
     }
 }

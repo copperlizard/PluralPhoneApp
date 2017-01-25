@@ -81,7 +81,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MaterialManager.cs" />
+    <Compile Include="Assets\_Scripts\MaterialCalculator.cs" />
+    <Compile Include="Assets\_Scripts\MaterialManager.cs" />
     <Compile Include="Assets\_Scripts\PanelManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

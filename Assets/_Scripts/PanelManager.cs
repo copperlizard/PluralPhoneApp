@@ -6,6 +6,8 @@ public class PanelManager : MonoBehaviour
     public Animator m_calcPanel, m_matPanel;
 
     public float m_minMove = 300.0f;
+    
+    private bool m_lock = false;
 
     // Use this for initialization
     void Start()
@@ -24,6 +26,10 @@ public class PanelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_lock)
+        {
+            return;
+        }
 #if UNITY_EDITOR
         GetKeyboardInput();
 #else
@@ -84,7 +90,7 @@ public class PanelManager : MonoBehaviour
             }
 
             yield return null;
-        } while (Input.touchCount > 0);
+        } while (Input.touchCount > 0 && !m_lock);
 
         yield return null;
     }
@@ -99,6 +105,16 @@ public class PanelManager : MonoBehaviour
     {
         m_matPanel.SetBool("Visible", true);
         m_calcPanel.SetBool("Visible", false);
+    }
+
+    public void LockPanels()
+    {
+        m_lock = true;
+    }
+
+    public void UnlockPanels()
+    {
+        m_lock = false;
     }
 }
 
