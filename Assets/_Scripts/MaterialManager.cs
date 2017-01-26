@@ -67,13 +67,19 @@ public class MaterialManager : MonoBehaviour
 
     public InputField m_matName, m_matSG, m_matD;
 
-    public Dropdown m_calcMatDropDown, m_matMatDropDown;
+    public Dropdown m_calcMatDropDown, m_matMatDropDown, m_matDensityUnitDropDown;
 
     private Text m_matNamePlaceHolderText, m_matSGPlaceHolderText, m_matDPlaceHolderText;
 
     // Use this for initialization
     void Awake ()
     {
+        LoadList();
+
+        m_matNamePlaceHolderText = m_matName.placeholder.GetComponent<Text>();
+        m_matSGPlaceHolderText = m_matSG.placeholder.GetComponent<Text>();
+        m_matDPlaceHolderText = m_matD.placeholder.GetComponent<Text>();
+
         if (m_matName == null)
         {
             Debug.Log("m_matName not assigned!");
@@ -99,11 +105,13 @@ public class MaterialManager : MonoBehaviour
             Debug.Log("m_matMatDropDown not assigned!");
         }
 
-        m_matNamePlaceHolderText = m_matName.placeholder.GetComponent<Text>();
-        m_matSGPlaceHolderText = m_matSG.placeholder.GetComponent<Text>();
-        m_matDPlaceHolderText = m_matD.placeholder.GetComponent<Text>();
-
-        LoadList();
+        if (m_matDensityUnitDropDown == null)
+        {
+            Debug.Log("m_matDensityUnitDropDown not assigned!");
+        }
+        int lastDensitytUnit = PlayerPrefs.GetInt("lastDensityUnit", 0);
+        m_matDensityUnitDropDown.value = lastDensitytUnit;
+        
         UpdateMaterialPanel();
     }
 	
@@ -159,18 +167,71 @@ public class MaterialManager : MonoBehaviour
         UpdateMaterialPanel();
     }
 
-    public void UpdateMaterialD() //called when input field value changes on mat panel
+    public void UpdateMaterialDensity() //called when input field value changes on mat panel
     {
         //SG = ρsubstance / ρH2O
 
         //for D[kg/m^3] => ρH2O = 1000
         //for D[g/cm^3] => ρH2O = 1
 
-        m_materials[m_matMatDropDown.value].m_d = float.Parse(m_matD.text);
+        float num = float.Parse(m_matD.text);
+        //convert to kg/m^3
+        switch (m_matDensityUnitDropDown.value)
+        {
+            case 0: //no conversion
+                break;
+            case 1: //g/cm^3
+                num /= (1000.0f/100.0f);
+                break;
+            case 2: //g/mm^3
+                num /= (1000.0f / 1000.0f);
+                break;
+            case 3: //oz/in^3
+                num /= (35.274f / 39.3701f);
+                break;
+            case 4: //lb/ft^3
+                num /= (2.20462f / 3.28084f);
+                break;
+            default:
+                break;
+        }
+
+        m_materials[m_matMatDropDown.value].m_d = num;
         m_materials[m_matMatDropDown.value].m_sg = m_materials[m_matMatDropDown.value].m_d / 1000.0f;
 
         SaveList();
         UpdateMaterialPanel();
+    }
+
+    public void UpdateMaterialDensityDisp ()
+    {
+        //convert to desired density unit from kg/m^3
+
+        Debug.Log("m_matDensityUnitDropDown.value == " + m_matDensityUnitDropDown.value.ToString());
+        PlayerPrefs.SetInt("lastDensityUnit", m_matDensityUnitDropDown.value);
+
+        float dNum = m_materials[m_matMatDropDown.value].m_d;
+        switch (m_matDensityUnitDropDown.value)
+        {
+            case 0: //no conversion
+                break;
+            case 1: //g/cm^3
+                dNum *= (1000.0f / 100.0f);
+                break;
+            case 2: //g/mm^3
+                dNum *= (1000.0f / 1000.0f);
+                break;
+            case 3: //oz/in^3
+                dNum *= (35.274f / 39.3701f);
+                break;
+            case 4: //lb/ft^3
+                dNum *= (2.20462f / 3.28084f);
+                break;
+            default:
+                break;
+        }
+
+        m_matDPlaceHolderText.text = string.Format("{0:N2}", dNum);
     }
 
     public void UpdateMaterialPanel () //called when m_matMatDropDon.value changes
@@ -182,8 +243,33 @@ public class MaterialManager : MonoBehaviour
         m_matSG.text = "";
         m_matD.text = "";
         m_matNamePlaceHolderText.text = m_materials[m_matMatDropDown.value].m_name;
-        m_matSGPlaceHolderText.text = m_materials[m_matMatDropDown.value].m_sg.ToString();
-        m_matDPlaceHolderText.text = m_materials[m_matMatDropDown.value].m_d.ToString();
+        m_matSGPlaceHolderText.text = string.Format("{0:N2}", m_materials[m_matMatDropDown.value].m_sg);
+
+        
+
+        //convert to desired density unit from kg/m^3
+        float dNum = m_materials[m_matMatDropDown.value].m_d;
+        switch (m_matDensityUnitDropDown.value)
+        {
+            case 0: //no conversion
+                break;
+            case 1: //g/cm^3
+                dNum *= (1000.0f / 100.0f);
+                break;
+            case 2: //g/mm^3
+                dNum *= (1000.0f / 1000.0f);
+                break;
+            case 3: //oz/in^3
+                dNum *= (35.274f / 39.3701f);
+                break;
+            case 4: //lb/ft^3
+                dNum *= (2.20462f / 3.28084f);
+                break;
+            default:
+                break;
+        }
+
+        m_matDPlaceHolderText.text = string.Format("{0:N2}", dNum);
     }
 
     public void AddMaterial () //called by gui
