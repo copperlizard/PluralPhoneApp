@@ -35,6 +35,10 @@ public class PanelManager : MonoBehaviour
 #else
         GetTouchInput();
 #endif
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitApplication();
+        }
     }
 
     private void GetKeyboardInput ()
@@ -115,6 +119,15 @@ public class PanelManager : MonoBehaviour
     public void UnlockPanels()
     {
         m_lock = false;
+    }
+
+    public void QuitApplication()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
 
