@@ -213,12 +213,10 @@ public class MaterialCalculator : MonoBehaviour
         {
             return;
         }
-
-        //Debug.Log("calculating length...");
         
         float v = WeightToVolume(m_weight);
-        //float v = 1.0f;
-
+        Debug.Log("v == " + v.ToString());
+                
         //v = pi*r^2*h
         //h = v/(pi*r^2)
 
@@ -227,11 +225,10 @@ public class MaterialCalculator : MonoBehaviour
 
         m_filLength = v / (m_PI * r2);
 
-        //Debug.Log("m_filLenght == " + m_filLength.ToString() + System.Environment.NewLine);
-
-        m_answerText.text = string.Format("{0:N2}", m_filLength) + "m";
-        m_answerText.text += System.Environment.NewLine + string.Format("{0:N2}", m_filLength * 3.28084f) + "ft";
-        m_answerText.text += System.Environment.NewLine + string.Format("{0:N2}", m_filLength * 39.3701f) + "in";        
+        m_answerText.text = "<b>Length <size=52>(Volume)</size></b>";
+        m_answerText.text += System.Environment.NewLine + string.Format("{0:N2}", m_filLength) + "m <size=52>(" + string.Format("{0:N2}", v * 1000000f) + "cm\xB3)</size>";
+        m_answerText.text += System.Environment.NewLine + string.Format("{0:N2}", m_filLength * 3.28084f) + "ft <size=52>(" + string.Format("{0:N2}", v * 35.3147f) + "ft\xB3)</size>";
+        m_answerText.text += System.Environment.NewLine + string.Format("{0:N2}", m_filLength * 39.3701f) + "in <size=52>(" + string.Format("{0:N2}", v * 61023.7f) + "in\xB3)</size>";        
     }
 
     private float WeightToVolume (float w)
