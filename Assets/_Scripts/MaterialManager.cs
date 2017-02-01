@@ -10,17 +10,17 @@ using UnityEngine.UI;
 public class Mat : IEquatable<Mat>, IComparable<Mat>
 {
     public string m_name;
-    public float m_sg; // specific gravity
-    public float m_d; // density
+    public double m_sg; // specific gravity
+    public double m_d; // density
 
     public Mat()
     {
         m_name = "New";
-        m_sg = 0.0f;
-        m_d = 0.0f;
+        m_sg = 0.0d;
+        m_d = 0.0d;
     }
 
-    public Mat(string name, float sg = 0.0f, float d = 0.0f)
+    public Mat(string name, double sg = 0.0d, double d = 0.0d)
     {
         m_name = name;
         m_sg = sg;
@@ -160,8 +160,8 @@ public class MaterialManager : MonoBehaviour
         //for D[kg/m^3] => ρH2O = 1000
         //for D[g/cm^3] => ρH2O = 1
 
-        m_materials[m_matMatDropDown.value].m_sg = float.Parse(m_matSG.text);
-        m_materials[m_matMatDropDown.value].m_d = m_materials[m_matMatDropDown.value].m_sg * 1000.0f;
+        m_materials[m_matMatDropDown.value].m_sg = double.Parse(m_matSG.text);
+        m_materials[m_matMatDropDown.value].m_d = m_materials[m_matMatDropDown.value].m_sg * 1000.0d;
 
         SaveList();
         UpdateMaterialPanel();
@@ -174,30 +174,30 @@ public class MaterialManager : MonoBehaviour
         //for D[kg/m^3] => ρH2O = 1000
         //for D[g/cm^3] => ρH2O = 1
 
-        float num = float.Parse(m_matD.text);
+        double num = double.Parse(m_matD.text);
         //convert to kg/m^3
         switch (m_matDensityUnitDropDown.value)
         {
             case 0: //no conversion
                 break;
             case 1: //g/cm^3
-                num /= (1000.0f/100.0f);
+                num /= (1000.0d / 100.0d);
                 break;
             case 2: //g/mm^3
-                num /= (1000.0f / 1000.0f);
+                num /= (1000.0d / 1000.0d);
                 break;
             case 3: //oz/in^3
-                num /= (35.274f / 39.3701f);
+                num /= (35.274d / 39.3701d);
                 break;
             case 4: //lb/ft^3
-                num /= (2.20462f / 3.28084f);
+                num /= (2.20462d / 3.28084d);
                 break;
             default:
                 break;
         }
 
         m_materials[m_matMatDropDown.value].m_d = num;
-        m_materials[m_matMatDropDown.value].m_sg = m_materials[m_matMatDropDown.value].m_d / 1000.0f;
+        m_materials[m_matMatDropDown.value].m_sg = m_materials[m_matMatDropDown.value].m_d / 1000.0d;
 
         SaveList();
         UpdateMaterialPanel();
@@ -207,25 +207,25 @@ public class MaterialManager : MonoBehaviour
     {
         //convert to desired density unit from kg/m^3
 
-        Debug.Log("m_matDensityUnitDropDown.value == " + m_matDensityUnitDropDown.value.ToString());
+        //Debug.Log("m_matDensityUnitDropDown.value == " + m_matDensityUnitDropDown.value.ToString());
         PlayerPrefs.SetInt("lastDensityUnit", m_matDensityUnitDropDown.value);
 
-        float dNum = m_materials[m_matMatDropDown.value].m_d;
+        double dNum = m_materials[m_matMatDropDown.value].m_d;
         switch (m_matDensityUnitDropDown.value)
         {
             case 0: //no conversion
                 break;
             case 1: //g/cm^3
-                dNum *= (1000.0f / 100.0f);
+                dNum *= (1000.0d / 100.0d);
                 break;
             case 2: //g/mm^3
-                dNum *= (1000.0f / 1000.0f);
+                dNum *= (1000.0d / 1000.0d);
                 break;
             case 3: //oz/in^3
-                dNum *= (35.274f / 39.3701f);
+                dNum *= (35.274d / 39.3701d);
                 break;
             case 4: //lb/ft^3
-                dNum *= (2.20462f / 3.28084f);
+                dNum *= (2.20462d / 3.28084d);
                 break;
             default:
                 break;
@@ -248,22 +248,22 @@ public class MaterialManager : MonoBehaviour
         
 
         //convert to desired density unit from kg/m^3
-        float dNum = m_materials[m_matMatDropDown.value].m_d;
+        double dNum = m_materials[m_matMatDropDown.value].m_d;
         switch (m_matDensityUnitDropDown.value)
         {
             case 0: //no conversion
                 break;
             case 1: //g/cm^3
-                dNum *= (1000.0f / 100.0f);
+                dNum *= (1000.0d / 100.0d);
                 break;
             case 2: //g/mm^3
-                dNum *= (1000.0f / 1000.0f);
+                dNum *= (1000.0d / 1000.0d);
                 break;
             case 3: //oz/in^3
-                dNum *= (35.274f / 39.3701f);
+                dNum *= (35.274d / 39.3701d);
                 break;
             case 4: //lb/ft^3
-                dNum *= (2.20462f / 3.28084f);
+                dNum *= (2.20462d / 3.28084d);
                 break;
             default:
                 break;
@@ -355,15 +355,18 @@ public class MaterialManager : MonoBehaviour
 
             // GENERATE BASIC MATERIALS!!!
 
-            m_materials.Add(new Mat("ABS", 1.04f, 1040.0f));
-            m_materials.Add(new Mat("ASA", 1.08f, 1080.0f));
-            m_materials.Add(new Mat("HIPS", 1.04f, 1040.0f));
-            m_materials.Add(new Mat("PETG", 1.27f, 1270.0f));
-            m_materials.Add(new Mat("TPU", 1.12f, 1120.0f));
-            m_materials.Add(new Mat("PLA", 1.24f, 1240.0f));
-            m_materials.Add(new Mat("Nylon 680", 1.1f, 1100.0f));
-            m_materials.Add(new Mat("SSU01", 1.24f, 1240.0f)); // soluble
-            m_materials.Add(new Mat("SSU02", 1.24f, 1240.0f)); // softening            
+            m_materials.Add(new Mat("ABS", 1.04d, 1040.0d));
+            m_materials.Add(new Mat("ASA", 1.08d, 1080.0d));
+            m_materials.Add(new Mat("HIPS", 1.04d, 1040.0d));
+            m_materials.Add(new Mat("PETG", 1.27d, 1270.0d));
+            m_materials.Add(new Mat("TPU", 1.12d, 1120.0d));
+            m_materials.Add(new Mat("PLA", 1.24d, 1240.0d));
+            m_materials.Add(new Mat("PCABS", 1.2d, 1200.0d));
+            m_materials.Add(new Mat("nPower", 1.26d, 1260.0d));
+            m_materials.Add(new Mat("nPower Support", 1.26d, 1260.0d));
+            m_materials.Add(new Mat("Nylon 680", 1.1d, 1100.0d));
+            m_materials.Add(new Mat("SSU01", 1.24d, 1240.0d)); // soluble
+            m_materials.Add(new Mat("SSU02", 1.24d, 1240.0d)); // softening            
 
             //AlphabatizeList();
             m_materials.Sort(); //because I'm lazy
