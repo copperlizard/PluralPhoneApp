@@ -245,8 +245,6 @@ public class MaterialManager : MonoBehaviour
         m_matNamePlaceHolderText.text = m_materials[m_matMatDropDown.value].m_name;
         m_matSGPlaceHolderText.text = string.Format("{0:N2}", m_materials[m_matMatDropDown.value].m_sg);
 
-        
-
         //convert to desired density unit from kg/m^3
         double dNum = m_materials[m_matMatDropDown.value].m_d;
         switch (m_matDensityUnitDropDown.value)

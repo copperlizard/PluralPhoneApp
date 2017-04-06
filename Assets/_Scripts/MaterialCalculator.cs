@@ -122,6 +122,11 @@ public class MaterialCalculator : MonoBehaviour
 
     public void SaveReelWeight () // called by change to reel weight input field
     {
+        if (m_reelWeight.text == "")
+        {
+            return;
+        }
+
         m_emptyReelWeight = double.Parse(m_reelWeight.text);
 
         switch (m_reelWeightUnitDropDown.value)
@@ -201,7 +206,7 @@ public class MaterialCalculator : MonoBehaviour
                 break;
         }
 
-        m_reelWeightPlaceHolderText.text = string.Format("{0:N2}", dispWeight);
+        m_reelWeightPlaceHolderText.text = string.Format("{0:N3}", dispWeight);
     }
 
     public void UpdateMatWeightDisp () //called by weight unit dropdown

@@ -84,6 +84,7 @@
     <Compile Include="Assets\_Scripts\MaterialCalculator.cs" />
     <Compile Include="Assets\_Scripts\MaterialManager.cs" />
     <Compile Include="Assets\_Scripts\PanelManager.cs" />
+    <Compile Include="Assets\_Scripts\ReelWeightManager.cs" />
     <Compile Include="Assets\_Scripts\Rotator.cs" />
   </ItemGroup>
   <ItemGroup>
