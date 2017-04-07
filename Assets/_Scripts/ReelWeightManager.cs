@@ -197,22 +197,23 @@ public class ReelWeightManager : MonoBehaviour
 
             m_reelWeights.Sort();
 
-            m_selectedReelWeightDropDownInd = m_reelWeights.IndexOf(w);
+            UpdateReelWeightDisplayList(); //need to update lists before changing dropdown value...
+
+            m_selectedReelWeightDropDownInd = m_reelWeights.IndexOf(w);            
             m_reelWeightDropDown.value = m_selectedReelWeightDropDownInd;
 
             SaveReelWeights();
+            return;
         }
-
-        UpdateReelWeightDisplayList();
     }
 
     public void SelectReelWeight () // Called when drop down selection made
     {
-        return;
-
         if (m_weightsLoaded)
         {
-            Debug.Log("hello");
+            Debug.Log("m_reelWeightDropDown.value == " + m_reelWeightDropDown.value.ToString());
+
+            Debug.Log("m_dispWeights[m_reelWeightDropDown.value] == " + m_dispWeights[m_reelWeightDropDown.value].ToString());
 
             PlayerPrefs.SetInt("lastReelWeightValue", m_reelWeightDropDown.value);
             m_reelWeightInput.text = m_dispWeights[m_reelWeightDropDown.value].ToString("r");
