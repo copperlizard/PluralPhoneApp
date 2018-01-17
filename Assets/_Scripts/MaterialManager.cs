@@ -354,17 +354,23 @@ public class MaterialManager : MonoBehaviour
             // GENERATE BASIC MATERIALS!!!
 
             m_materials.Add(new Mat("ABS", 1.04d, 1040.0d));
-            m_materials.Add(new Mat("ASA", 1.08d, 1080.0d));
-            m_materials.Add(new Mat("HIPS", 1.04d, 1040.0d));
-            m_materials.Add(new Mat("PETG", 1.27d, 1270.0d));
-            m_materials.Add(new Mat("TPU", 1.12d, 1120.0d));
+            m_materials.Add(new Mat("ABS-ESD", 1.09d, 1090.0d));
+            m_materials.Add(new Mat("ASA", 1.07d, 1070.0d));
+            m_materials.Add(new Mat("Elasto 75", 1.18d, 1180.0d));
+            m_materials.Add(new Mat("Elasto 85", 1.12d, 1120.0d));
+            m_materials.Add(new Mat("Elasto 95", 1.12d, 1120.0d));
+            m_materials.Add(new Mat("PETG/TECHG", 1.27d, 1270.0d));
             m_materials.Add(new Mat("PLA", 1.24d, 1240.0d));
             m_materials.Add(new Mat("PCABS", 1.2d, 1200.0d));
-            m_materials.Add(new Mat("nPower", 1.26d, 1260.0d));
+            m_materials.Add(new Mat("nPower-PPS", 1.26d, 1260.0d));
             m_materials.Add(new Mat("nPower Support", 1.26d, 1260.0d));
-            m_materials.Add(new Mat("Nylon 680", 1.1d, 1100.0d));
-            m_materials.Add(new Mat("SSU01", 1.24d, 1240.0d)); // soluble
-            m_materials.Add(new Mat("SSU02", 1.24d, 1240.0d)); // softening            
+            m_materials.Add(new Mat("Nylon-Carbon", 1.1d, 1100.0d));
+            m_materials.Add(new Mat("Nylon-Glass", 1.1d, 1100.0d));
+            m_materials.Add(new Mat("SSU00-HIPS", 1.04d, 1040.0d));
+            m_materials.Add(new Mat("SSU01-Soluble", 1.24d, 1240.0d)); // soluble
+            m_materials.Add(new Mat("SSU02-Nylon", 1.24d, 1240.0d)); // softening     
+            m_materials.Add(new Mat("SSU03", 1.25d, 1250.0d));
+            m_materials.Add(new Mat("SSU05", 1.24d, 1240.0d));
 
             //AlphabatizeList();
             m_materials.Sort(); //because I'm lazy
